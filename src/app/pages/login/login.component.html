@@ -1,0 +1,127 @@
+<div class="login-container">
+  <div class="login-card">
+    <!-- Logo/Brand -->
+    <div class="brand">
+      <div class="brand-icon">🛹</div>
+      <h1 class="brand-title">Skate Market</h1>
+      <p class="brand-subtitle">Tu tienda de skate favorita</p>
+    </div>
+
+    <!-- Login Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <h2 class="form-title">Iniciar Sesión</h2>
+
+      <!-- Error Message -->
+      @if (errorMessage()) {
+        <div class="alert alert-error">
+          <svg class="alert-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>{{ errorMessage() }}</span>
+        </div>
+      }
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="email" class="form-label">Correo Electrónico</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="form-input"
+          [class.error]="email?.invalid && email?.touched"
+          placeholder="tu@email.com"
+          autocomplete="email"
+        />
+        @if (email?.invalid && email?.touched) {
+          <div class="form-error">
+            @if (email?.errors?.['required']) {
+              <span>El correo es requerido</span>
+            }
+            @if (email?.errors?.['email']) {
+              <span>Ingresa un correo válido</span>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password" class="form-label">Contraseña</label>
+        <div class="password-wrapper">
+          <input
+            [type]="showPassword() ? 'text' : 'password'"
+            id="password"
+            formControlName="password"
+            class="form-input"
+            [class.error]="password?.invalid && password?.touched"
+            placeholder="••••••••"
+            autocomplete="current-password"
+          />
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+          >
+            @if (showPassword()) {
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+              </svg>
+            } @else {
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            }
+          </button>
+        </div>
+        @if (password?.invalid && password?.touched) {
+          <div class="form-error">
+            @if (password?.errors?.['required']) {
+              <span>La contraseña es requerida</span>
+            }
+            @if (password?.errors?.['minlength']) {
+              <span>Mínimo 6 caracteres</span>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Forgot Password -->
+      <div class="form-footer">
+        <a routerLink="/forgot-password" class="link-secondary">¿Olvidaste tu contraseña?</a>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="loading() || loginForm.invalid"
+      >
+        @if (loading()) {
+          <span class="spinner"></span>
+          <span>Iniciando sesión...</span>
+        } @else {
+          <span>Iniciar Sesión</span>
+        }
+      </button>
+    </form>
+
+    <!-- Register Link -->
+    <div class="register-section">
+      <p class="register-text">
+        ¿No tienes cuenta?
+        <a routerLink="/register" class="link-primary">Regístrate aquí</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Background Decoration -->
+  <div class="bg-decoration">
+    <div class="decoration-circle circle-1"></div>
+    <div class="decoration-circle circle-2"></div>
+    <div class="decoration-circle circle-3"></div>
+  </div>
+</div>
+

@@ -1,4 +1,29 @@
-# SkateMarket
+# 🛹 Skate Market
+
+Tienda de patinetas y ropa de skate con Angular 20 + Supabase.
+
+## 🚀 Setup
+
+```bash
+npm install
+npm start
+```
+
+## ⚙️ Configurar Supabase
+
+Edita `src/environments/environment.ts`:
+
+```typescript
+export const environment = {
+  production: false,
+  supabase: {
+    url: 'TU_URL',
+    anonKey: 'TU_KEY'
+  }
+};
+```
+
+Obtén las credenciales en: [app.supabase.com](https://app.supabase.com) → Settings → API
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.9.
 

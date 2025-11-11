@@ -1,0 +1,98 @@
+<div class="home-container">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="brand">
+        <span class="brand-icon">🛹</span>
+        <h1 class="brand-title">Skate Market</h1>
+      </div>
+      
+      <div class="user-menu">
+        <div class="user-info">
+          <div class="user-avatar">
+            <span>{{ userName.charAt(0).toUpperCase() }}</span>
+          </div>
+          <div class="user-details">
+            <p class="user-name">{{ userName }}</p>
+            <p class="user-email">{{ userEmail }}</p>
+          </div>
+        </div>
+        <button class="btn-logout" (click)="logout()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          Cerrar Sesión
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="welcome-section">
+      <h2 class="welcome-title">¡Bienvenido a Skate Market! 🎉</h2>
+      <p class="welcome-text">
+        Tu tienda de patinetas y ropa de skate está lista para despegar.
+      </p>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🛹</div>
+        <h3 class="feature-title">Patinetas</h3>
+        <p class="feature-description">
+          Las mejores tablas y componentes para tu setup perfecto.
+        </p>
+        <button class="btn-feature">Próximamente</button>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">👕</div>
+        <h3 class="feature-title">Ropa</h3>
+        <p class="feature-description">
+          Streetwear y ropa de las mejores marcas de skate.
+        </p>
+        <button class="btn-feature">Próximamente</button>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">👟</div>
+        <h3 class="feature-title">Calzado</h3>
+        <p class="feature-description">
+          Zapatillas diseñadas para el skateboarding.
+        </p>
+        <button class="btn-feature">Próximamente</button>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🎒</div>
+        <h3 class="feature-title">Accesorios</h3>
+        <p class="feature-description">
+          Todo lo que necesitas para complementar tu estilo.
+        </p>
+        <button class="btn-feature">Próximamente</button>
+      </div>
+    </div>
+
+    <!-- Info Section -->
+    <div class="info-section">
+      <div class="info-card">
+        <svg class="info-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <h3>Sistema de Autenticación Configurado</h3>
+        <p>
+          Tu aplicación está conectada con Supabase y lista para gestionar usuarios.
+          El sistema de login/registro está funcionando correctamente.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 Skate Market. Powered by Supabase & Angular</p>
+  </footer>
+</div>
+
