@@ -29,70 +29,116 @@
 
   <!-- Main Content -->
   <main class="main-content">
-    <div class="welcome-section">
-      <h2 class="welcome-title">¡Bienvenido a Skate Market! 🎉</h2>
-      <p class="welcome-text">
-        Tu tienda de patinetas y ropa de skate está lista para despegar.
-      </p>
-    </div>
-
-    <!-- Features Grid -->
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">🛹</div>
-        <h3 class="feature-title">Patinetas</h3>
-        <p class="feature-description">
-          Las mejores tablas y componentes para tu setup perfecto.
-        </p>
-        <button class="btn-feature">Próximamente</button>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">👕</div>
-        <h3 class="feature-title">Ropa</h3>
-        <p class="feature-description">
-          Streetwear y ropa de las mejores marcas de skate.
-        </p>
-        <button class="btn-feature">Próximamente</button>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">👟</div>
-        <h3 class="feature-title">Calzado</h3>
-        <p class="feature-description">
-          Zapatillas diseñadas para el skateboarding.
-        </p>
-        <button class="btn-feature">Próximamente</button>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">🎒</div>
-        <h3 class="feature-title">Accesorios</h3>
-        <p class="feature-description">
-          Todo lo que necesitas para complementar tu estilo.
-        </p>
-        <button class="btn-feature">Próximamente</button>
-      </div>
-    </div>
-
-    <!-- Info Section -->
-    <div class="info-section">
-      <div class="info-card">
-        <svg class="info-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    <!-- Search Section -->
+    <div class="search-section">
+      <h2 class="section-title">Catálogo de Productos</h2>
+      <div class="search-box">
+        <svg class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
-        <h3>Sistema de Autenticación Configurado</h3>
-        <p>
-          Tu aplicación está conectada con Supabase y lista para gestionar usuarios.
-          El sistema de login/registro está funcionando correctamente.
-        </p>
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Buscar productos por nombre, tipo o descripción..."
+          [value]="searchTerm()"
+          (input)="buscarProductos($any($event.target).value)"
+        />
       </div>
     </div>
+
+    <!-- Loading State -->
+    @if (loading()) {
+      <div class="loading-container">
+        <div class="spinner-large"></div>
+        <p>Cargando productos...</p>
+      </div>
+    }
+
+    <!-- No hay productos publicados -->
+    @else if (noHayProductos) {
+      <div class="empty-state">
+        <svg class="empty-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+        </svg>
+        <h3>No hay productos disponibles</h3>
+        <p>Aún no hay productos publicados en la tienda.</p>
+      </div>
+    }
+
+    <!-- No hay resultados de búsqueda -->
+    @else if (noHayResultados) {
+      <div class="empty-state">
+        <svg class="empty-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <h3>No se encontraron coincidencias</h3>
+        <p>No hay productos que coincidan con tu búsqueda: <strong>"{{ searchTerm() }}"</strong></p>
+        <button class="btn-secondary" (click)="buscarProductos('')">
+          Ver todos los productos
+        </button>
+      </div>
+    }
+
+    <!-- Products Grid -->
+    @else {
+      <div class="products-info">
+        <p class="results-count">
+          @if (searchTerm()) {
+            Encontrados {{ productosFiltrados().length }} resultado(s) para "{{ searchTerm() }}"
+          } @else {
+            Mostrando {{ productosFiltrados().length }} producto(s)
+          }
+        </p>
+      </div>
+
+      <div class="products-grid">
+        @for (producto of productosFiltrados(); track producto.id) {
+          <div class="product-card" (click)="verDetalle(producto.id!)">
+            <div class="product-header">
+              <span class="product-type">{{ producto.tipo }}</span>
+              @if (producto.cantidad === 0) {
+                <span class="badge badge-out">Agotado</span>
+              } @else if (producto.cantidad < 5) {
+                <span class="badge badge-low">Pocas unidades</span>
+              } @else {
+                <span class="badge badge-available">Disponible</span>
+              }
+            </div>
+
+            <div class="product-body">
+              <h3 class="product-name">{{ producto.nombre }}</h3>
+              <p class="product-description">{{ producto.descripcion }}</p>
+              
+              <div class="product-details">
+                <div class="detail-item">
+                  <svg class="detail-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  </svg>
+                  <span>{{ producto.cantidad }} en stock</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="product-footer">
+              <div class="product-price">
+                <span class="price-label">Precio:</span>
+                <span class="price-value">${{ producto.precio.toFixed(2) }}</span>
+              </div>
+              <button class="btn-view">
+                Ver detalles
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    }
   </main>
 
   <!-- Footer -->
   <footer class="footer">
-    <p>&copy; 2025 Skate Market. Powered by Supabase & Angular</p>
+    <p>&copy; 2025 Skate Market</p>
   </footer>
 </div>
-

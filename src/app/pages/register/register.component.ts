@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { ProfileService } from '../../services/profile.service';
 
 @Component({
   selector: 'app-register',
@@ -14,6 +15,7 @@ import { AuthService } from '../../services/auth.service';
 export class RegisterComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
+  private profileService = inject(ProfileService);
   private router = inject(Router);
 
   registerForm: FormGroup;
@@ -68,7 +70,10 @@ export class RegisterComponent {
     try {
       const result = await this.authService.signUp(email, password, { fullName });
       
-      if (result.success) {
+      if (result.success && result.user) {
+        // Crear perfil en la tabla perfiles
+        await this.profileService.createProfile(result.user.id, fullName);
+        
         this.successMessage.set('¡Cuenta creada exitosamente! Revisa tu correo para confirmar tu cuenta.');
         this.registerForm.reset();
         

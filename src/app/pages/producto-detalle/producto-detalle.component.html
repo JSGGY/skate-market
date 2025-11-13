@@ -1,0 +1,134 @@
+<div class="detalle-container">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="brand">
+        <span class="brand-icon">🛹</span>
+        <h1 class="brand-title">Skate Market</h1>
+      </div>
+      
+      <div class="user-menu">
+        <div class="user-info">
+          <p class="user-name">{{ userName }}</p>
+        </div>
+        <button class="btn-logout" (click)="logout()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          Cerrar Sesión
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <button class="btn-back" (click)="volver()">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+      Volver al catálogo
+    </button>
+
+    <!-- Loading State -->
+    @if (loading()) {
+      <div class="loading-container">
+        <div class="spinner-large"></div>
+        <p>Cargando producto...</p>
+      </div>
+    }
+
+    <!-- Producto no encontrado -->
+    @else if (notFound()) {
+      <div class="empty-state">
+        <svg class="empty-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <h3>Producto no encontrado</h3>
+        <p>El producto que buscas no existe o ya no está disponible.</p>
+      </div>
+    }
+
+    <!-- Detalle del Producto -->
+    @else if (producto()) {
+      <div class="producto-detalle">
+        <div class="producto-header">
+          <div class="header-info">
+            <span class="producto-tipo">{{ producto()!.tipo }}</span>
+            <h1 class="producto-nombre">{{ producto()!.nombre }}</h1>
+          </div>
+          <div class="disponibilidad" [class]="'disponibilidad-' + disponibilidadClass">
+            <svg class="disponibilidad-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              @if (disponibilidadClass === 'available') {
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              } @else if (disponibilidadClass === 'low') {
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              } @else {
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              }
+            </svg>
+            <span>{{ disponibilidadTexto }}</span>
+          </div>
+        </div>
+
+        <div class="producto-body">
+          <div class="seccion">
+            <h2 class="seccion-titulo">Descripción</h2>
+            <p class="producto-descripcion">{{ producto()!.descripcion }}</p>
+          </div>
+
+          <div class="detalles-grid">
+            <div class="detalle-card">
+              <div class="detalle-icon-wrapper">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                </svg>
+              </div>
+              <div class="detalle-info">
+                <span class="detalle-label">Tipo de Producto</span>
+                <span class="detalle-valor">{{ producto()!.tipo }}</span>
+              </div>
+            </div>
+
+            <div class="detalle-card">
+              <div class="detalle-icon-wrapper">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+              </div>
+              <div class="detalle-info">
+                <span class="detalle-label">Cantidad Disponible</span>
+                <span class="detalle-valor">{{ producto()!.cantidad }} unidades</span>
+              </div>
+            </div>
+
+            <div class="detalle-card">
+              <div class="detalle-icon-wrapper">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div class="detalle-info">
+                <span class="detalle-label">Precio</span>
+                <span class="detalle-valor precio">${{ producto()!.precio.toFixed(2) }}</span>
+              </div>
+            </div>
+
+            <div class="detalle-card">
+              <div class="detalle-icon-wrapper">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div class="detalle-info">
+                <span class="detalle-label">Publicado</span>
+                <span class="detalle-valor">{{ producto()!.publicado ? 'Sí' : 'No' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </main>
+</div>
+

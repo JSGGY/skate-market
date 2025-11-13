@@ -129,7 +129,7 @@ export class AuthService {
       }
 
       if (data.user) {
-        this.router.navigate(['/home']);
+        // No redirigir aquí, el componente de login se encargará
         return { success: true, user: data.user };
       }
 

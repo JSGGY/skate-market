@@ -1,10 +1,11 @@
 import { Routes } from '@angular/router';
 import { authGuard, guestGuard } from './guards/auth.guard';
+import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
@@ -23,7 +24,17 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'vendedor',
+    loadComponent: () => import('./pages/vendedor/vendedor.component').then(m => m.VendedorComponent),
+    canActivate: [adminGuard]
+  },
+  {
+    path: 'producto/:id',
+    loadComponent: () => import('./pages/producto-detalle/producto-detalle.component').then(m => m.ProductoDetalleComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: '**',
-    redirectTo: 'home'
+    redirectTo: 'login'
   }
 ];
