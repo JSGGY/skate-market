@@ -31,9 +31,7 @@
             ],
             "styles": [
               "src/styles.scss"
-            ],
-            "prerender": false,
-            "ssr": false
+            ]
           },
           "configurations": {
             "production": {
