@@ -7,7 +7,7 @@
         <h1 class="brand-title">Skate Market</h1>
         <span class="admin-badge">Admin</span>
       </div>
-      
+
       <div class="user-menu">
         <div class="user-info">
           <p class="user-name">{{ userName }}</p>
@@ -22,11 +22,14 @@
     </div>
   </header>
 
+
+
+
   <!-- Main Content -->
   <main class="main-content">
     <div class="form-container">
       <h2 class="form-title">Publicar Producto</h2>
-      
+
       <form [formGroup]="productoForm" (ngSubmit)="onSubmit()" class="producto-form">
         <!-- Success Message -->
         @if (successMessage()) {
@@ -155,6 +158,42 @@
               }
             </div>
           }
+        </div>
+        <div class="form-group">
+          <label for="imagen" class="form-label">
+            Imagen del producto
+          </label>
+          <div class="file-input-wrapper">
+            <input
+              type="file"
+              id="imagen"
+              accept="image/*"
+              (change)="onImageSelected($event)"
+              class="file-input"
+              #fileInput>
+            <div class="file-input-display" (click)="fileInput.click()">
+              <div class="file-input-content">
+                <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                </svg>
+                <span class="file-input-text">
+          {{ selectedImage ? selectedImage.name : 'Seleccionar imagen' }}
+        </span>
+              </div>
+              <span class="file-input-button">Buscar</span>
+            </div>
+          </div>
+          <small class="form-text">Formatos: PNG, JPG, JPEG (Máx. 5MB)</small>
+
+          <!-- Vista previa de la imagen -->
+          <div class="image-preview" *ngIf="imagePreview">
+            <img [src]="imagePreview" alt="Vista previa">
+            <button type="button" class="remove-image" (click)="removeImage()">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
         </div>
 
         <!-- Publicado -->

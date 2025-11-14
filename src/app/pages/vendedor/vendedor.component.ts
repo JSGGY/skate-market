@@ -23,6 +23,15 @@ export class VendedorComponent {
   errorMessage = signal<string | null>(null);
   successMessage = signal<string | null>(null);
 
+  // Propiedades para manejo de imagen
+  selectedImage: File | null = null;
+  imagePreview: string | null = null;
+
+  // Propiedades para alertas y estado de envío
+  alertMessage: string | null = null;
+  alertType: 'success' | 'error' | null = null;
+  isSubmitting: boolean = false;
+
   tiposProducto = [
     'Tabla',
     'Ruedas',
@@ -48,45 +57,73 @@ export class VendedorComponent {
     });
   }
 
-  async onSubmit() {
-    if (this.productoForm.invalid) {
-      this.productoForm.markAllAsTouched();
-      return;
-    }
-
-    this.loading.set(true);
-    this.errorMessage.set(null);
-    this.successMessage.set(null);
-
-    const user = this.authService.currentUser();
-    if (!user) {
-      this.errorMessage.set('No hay usuario autenticado');
-      this.loading.set(false);
-      return;
-    }
-
-    const producto = {
-      ...this.productoForm.value,
-      vendedor_id: user.id
-    };
-
-    try {
-      const result = await this.profileService.createProducto(producto);
-      
-      if (result.success) {
-        this.successMessage.set('¡Producto publicado exitosamente!');
-        this.productoForm.reset({
-          cantidad: 1,
-          precio: 0,
-          publicado: false
-        });
-      } else {
-        this.errorMessage.set(result.error || 'Error al publicar producto');
+  onImageSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      // Validar tipo de archivo
+      if (!file.type.startsWith('image/')) {
+        this.alertMessage = 'Por favor selecciona una imagen válida (PNG, JPG, JPEG)';
+        this.alertType = 'error';
+        setTimeout(() => this.alertMessage = null, 3000);
+        return;
       }
-    } catch (error) {
-      this.errorMessage.set('Error inesperado. Por favor intenta de nuevo.');
-    } finally {
-      this.loading.set(false);
+
+      // Validar tamaño (máx. 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        this.alertMessage = 'La imagen no puede superar los 5MB';
+        this.alertType = 'error';
+        setTimeout(() => this.alertMessage = null, 3000);
+        return;
+      }
+
+      this.selectedImage = file;
+
+      // Crear vista previa
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imagePreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  removeImage() {
+    this.selectedImage = null;
+    this.imagePreview = null;
+  }
+
+  async onSubmit() {
+    if (this.productoForm.valid) {
+      this.isSubmitting = true;
+      this.alertMessage = null;
+
+      try {
+        const result = await this.profileService.createProducto(
+          this.productoForm.value,
+          this.selectedImage || undefined
+        );
+
+        if (result.success) {
+          this.alertMessage = 'Producto creado exitosamente';
+          this.alertType = 'success';
+          this.productoForm.reset();
+          this.removeImage();
+          setTimeout(() => this.alertMessage = null, 3000);
+        } else {
+          this.alertMessage = result.error || 'Error al crear producto';
+          this.alertType = 'error';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        this.alertMessage = 'Error inesperado al crear producto';
+        this.alertType = 'error';
+      } finally {
+        this.isSubmitting = false;
+      }
+    } else {
+      this.alertMessage = 'Por favor completa todos los campos correctamente';
+      this.alertType = 'error';
+      setTimeout(() => this.alertMessage = null, 3000);
     }
   }
 
@@ -119,4 +156,3 @@ export class VendedorComponent {
     return user?.user_metadata?.['fullName'] || user?.email || 'Admin';
   }
 }
-
